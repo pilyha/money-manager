@@ -1,0 +1,17 @@
+language: java
+jdk:
+  - openjdk16
+
+script: ./mvnw clean install
+
+
+jobs:
+  include:
+    - stage: Test
+      script: ./mvnw clean test
+
+notification:
+  email: illia.popov57@gmail.com
+
+before_install:
+    - chmod +x mvnw

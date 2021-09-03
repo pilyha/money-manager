@@ -1,0 +1,23 @@
+version: '3.1'
+services:
+  app:
+    container_name: springboot-postgresql
+    image: springboot-postgresql
+    build: ./
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresqldb
+  postgresqldb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=money_manager
+    volumes:
+      - db-data:/var/lib/postgresql/data
+volumes:
+  db-data:
+    driver: local
