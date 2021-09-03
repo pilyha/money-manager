@@ -14,28 +14,28 @@ import java.util.List;
 
 @Controller
 public class MainController {
-    private final MainService mainService;
     private final UserService userService;
     private final PlanService planService;
     private final IncomeService incomeService;
     private final BalanceService balanceService;
     private final ExpenseService expenseService;
     private final CategoryService categoryService;
+    private final NoteService noteService;
 
-    public MainController(MainService mainService, UserService userService, PlanService planService, IncomeService incomeService, BalanceService balanceService, ExpenseService expenseService, CategoryService categoryService) {
-        this.mainService = mainService;
+    public MainController(UserService userService, PlanService planService, IncomeService incomeService, BalanceService balanceService, ExpenseService expenseService, CategoryService categoryService, NoteService noteService) {
         this.userService = userService;
         this.planService = planService;
         this.incomeService = incomeService;
         this.balanceService = balanceService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
+        this.noteService = noteService;
     }
 
     @GetMapping("/dashboard")
     public String homepage(Principal principal, Model model, @ModelAttribute("note") Note note, @ModelAttribute("category") Category category, BindingResult result) {
         User user = userService.findUserByUsername(principal.getName());
-        Balance balance = null;
+        Balance balance;
         if (user.getBalances().size() < 1) {
             balance = new Balance(user, 0);
         } else {
@@ -87,7 +87,7 @@ public class MainController {
             return "redirect:/dashboard";
         }
         User user = userService.findUserByUsername(principal.getName());
-        mainService.createNote(user, note);
+        noteService.addNote(user, note);
         return "redirect:/dashboard";
     }
 

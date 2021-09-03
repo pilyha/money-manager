@@ -3,7 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Add Income</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
 </head>
 <body>
@@ -19,7 +20,6 @@
             <li><a href="/incomes/new" class="nav-link px-2 link-dark">Add Income</a></li>
             <li><a href="/plans/new" class="nav-link px-2 link-dark">Add Plan</a></li>
             <li><a href="/expenses/new" class="nav-link px-2 link-dark">Add Expense</a></li>
-            <li><a href="/categories/new" class="nav-link px-2 link-dark">Add Category</a></li>
             <li><a href="/content" class="nav-link px-2 link-dark">Content</a></li>
             <li><a href="/history" class="nav-link px-2 link-dark">History</a></li>
         </ul>
@@ -34,24 +34,37 @@
         </div>
     </header>
 </div>
-<h1>New income</h1>
 <form th:action="@{/incomes/new}" th:method="POST" th:object="${income}">
-
     <label for="amount">Amount: </label>
-    <input type="number" class="form-control" autofocus="true" th:field="*{amount}" id = "amount">
-    <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}" />
+    <div class="input-group mb-3">
+        <span class="input-group-text">$</span>
+        <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" autofocus="true"
+               th:field="*{amount}" id="amount">
+        <span class="input-group-text">.00</span>
+        <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}"/>
+    </div>
     <label for="description">Description: </label>
-    <input type="text" class="form-control" autofocus="true" th:field="*{description}" id = "description">
-    <p th:if="${#fields.hasErrors('description')}" th:errorclass="error" th:errors="*{description}" />
-    <label for="date">Date: </label>
-    <input type="date" class="form-control" autofocus="true" th:field="*{date}" id = "date">
-    <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}" />
-
+    <div class="input-group">
+        <span class="input-group-text">Write ur description</span>
+        <textarea class="form-control" aria-label="With textarea" th:field="*{description}" id="description"></textarea>
+        <p th:if="${#fields.hasErrors('description')}" th:errorclass="error" th:errors="*{description}"/>
+    </div>
+    <label for="amount">Date: </label>
+    <div class="input-group mb-3">
+        <span class="input-group-text">Date</span>
+        <input type="date" class="form-control" autofocus="true"
+               th:field="*{date}" id="date">
+        <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"/>
+    </div>
     <input type="submit" value="Submit"/>
 </form>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"  integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+        integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+        crossorigin="anonymous"></script>
 
 </body>
 </html>

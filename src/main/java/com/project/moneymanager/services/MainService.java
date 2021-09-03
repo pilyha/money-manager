@@ -66,19 +66,6 @@ public class MainService {
         return (List<Role>) roleRepository.findAll();
     }
 
-    public Note createNote(User u, Note note) {
-        note.setUser(u);
-        noteRepository.save(note);
-        return note;
-    }
 
-    public void deletenote(Note note) {
-        noteRepository.delete(note);
-    }
-
-    public Note editnote(Note n, String str) {
-        n.setDescription(str);
-        return n;
-    }
 
 }

@@ -40,7 +40,7 @@ public class PlanController {
             return "addPlan.html";
         } else {
             plan.setUser(user);
-            Plan oneplan = planService.addPlan(plan);
+            planService.addPlan(plan);
             return "redirect:/dashboard";
         }
     }
