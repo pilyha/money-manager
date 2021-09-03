@@ -48,8 +48,7 @@ public class MainController {
         for (Balance bal : user.getBalances()) {
             values[j] = bal.getVal();
             dates[j] = j;
-            j++;
-        }
+            j++;        }
 
         String[] categories = new String[user.getCategories().size()];
         int[] persent = new int[user.getCategories().size()];
