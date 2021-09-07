@@ -102,7 +102,7 @@ public class IncomeControllerTest {
         income.setUser(user);
         incomeService.addIncome(user,income);
         Long id  = incomeService.findAllIncomes().get(0).getId();
-        this.mockMvc.perform(delete("/incomes/delete/" + id)
+        this.mockMvc.perform(delete("/incomes/" + id)
                 .with(user("Illia"))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))

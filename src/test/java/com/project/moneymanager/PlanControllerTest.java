@@ -6,10 +6,7 @@ import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.PlanRepository;
 import com.project.moneymanager.services.PlanService;
 import com.project.moneymanager.services.UserService;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -70,8 +67,8 @@ public class PlanControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("name", plan.getName())
                 .param("limitz", String.valueOf(plan.getLimitz()))
-                .param("start_datez", pattern.format(plan.getStart_datez()))
-                .param("end_datez", pattern.format(plan.getEnd_datez())))
+                .param("start_date", pattern.format(plan.getStart_date()))
+                .param("end_date", pattern.format(plan.getEnd_date())))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
@@ -107,7 +104,7 @@ public class PlanControllerTest {
         plan.setUser(user);
         planService.addPlan(plan);
         Long id = planService.findAllPlans().get(0).getId();
-        this.mockMvc.perform(delete("/plans/delete/" + id)
+        this.mockMvc.perform(delete("/plans/" + id)
                 .with(user("Illia"))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))

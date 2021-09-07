@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -13,10 +14,7 @@
 <div style="margin-left: 100px">
 <div class="container">
     <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a href="/index" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><img
-                    th:src="@{img/icon.png}"/></svg>
-        </a>
+        <a href="/index"><img th:src="@{img/icon.png}"/></a>
 
         <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
             <li><a href="/incomes/new" class="nav-link px-2 link-secondary">Add Income</a></li>
@@ -41,7 +39,7 @@
         <h3 style="font-family: 'Arabic Typesetting'"> notes</h3>
         <div class="list-group" style=" overflow:auto;height:250px;width:325px; margin-right:100px">
             <div th:each="note : ${notes}">
-                <form class="form-notes" th:method = "DELETE" th:action = "@{/notes/delete/{id}(id=${note.getId()})}">
+                <form class="form-notes" th:method = "DELETE" th:action = "@{/notes/{id}(id=${note.getId()})}">
                     <input type="checkbox" th:text="${note.getDescription()}" style="margin-right: 10px"/>
                     <input style="display: inline-block;width: 16px;height: 16px;background: url('https://i.stack.imgur.com/cLnMQ.png') no-repeat center center / contain;" type="submit">
                 </form>
@@ -91,9 +89,9 @@
             <tbody>
             <div th:each="plan : ${plans}">
                 <tr>
-                    <td><a th:text="${plan.getLimitz()}">limitz</a></td>
+                    <td><a th:text="${plan.getLimitz()}">limit</a></td>
                     <td><a th:text="${plan.getName()}">name</a></td>
-                    <td><a th:text="${plan.getStart_datez()}">datez</a><br><a th:text="${plan.getEnd_datez()}">datez</a>
+                    <td><a th:text="${plan.getStart_date()}">date</a><br><a th:text="${plan.getEnd_date()}">date</a>
                     </td>
                 </tr>
             </div>
@@ -106,7 +104,7 @@
 <form id="newCate" th:method="POST" th:action="@{/categories/new}" th:object="${category}">
     <input type="text" autofocus="true" th:field="*{name}"/>
     <input type="submit" value="Add category!"/>
-    <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"/>
+
 </form>
 </div>
 <div style="display:inline-flex ">
@@ -116,7 +114,7 @@
                 <h2 style="color: darkred" th:text="${balance}"></h2>
                 <h4 style="color: red">you have debits</h4>
             </div>
-            <div th:if="${balance>0}">
+            <div th:if="${balance>=0}">
                 <h2 style="color: darkgreen" th:text="${balance}"></h2>
             </div>
             <canvas id="myChart"></canvas>

@@ -22,8 +22,8 @@ public class UserValidator implements Validator {
         this.userRepository = userRepository;
     }
     @Override
-    public boolean supports (Class<?> clazz) {
-        return User.class.equals(clazz);
+    public boolean supports (Class<?> aClass) {
+        return User.class.equals(aClass);
     }
 
     @Override
@@ -35,9 +35,9 @@ public class UserValidator implements Validator {
         if (user.getUsername().length() < 3 || user.getUsername().length() > 32) {
             errors.rejectValue("username", "Size.user.username");
         }
-//        if (userService.findByUsername(user.getUsername()) != null) {
-//            errors.rejectValue("username", "Duplicate.user.username");
-//        }
+        if (userService.findByUsername(user.getUsername()) != null) {
+            errors.rejectValue("username", "Duplicate.user.username");
+        }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");
         if (user.getEmail().length() < 8 || user.getEmail().length() > 50) {

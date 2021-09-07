@@ -4,6 +4,7 @@ import com.project.moneymanager.models.Income;
 import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.IncomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,11 +12,13 @@ import java.util.List;
 @Service
 public class IncomeService {
 
-    @Autowired
-    private IncomeRepository incomeRepository;
-    @Autowired
-    private BalanceService balanceService;
+    private final IncomeRepository incomeRepository;
+    private final BalanceService balanceService;
 
+    public IncomeService(@Lazy IncomeRepository incomeRepository,@Lazy BalanceService balanceService) {
+        this.incomeRepository = incomeRepository;
+        this.balanceService = balanceService;
+    }
 
     public Income addIncome(User u, Income income) {
         income.setUser(u);

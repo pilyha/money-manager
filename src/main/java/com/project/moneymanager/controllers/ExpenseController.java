@@ -47,7 +47,7 @@ public class ExpenseController {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd ");
                 String today = df.format(Calendar.getInstance().getTime());
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String strDate = dateFormat.format(plan.getStart_datez());
+                String strDate = dateFormat.format(plan.getStart_date());
                 if (today.compareTo(strDate) > 0) {
 
                     if (balanceService.getLastBalance(user).getVal() + expense.getAmount() > plan.getLimitz()) {
@@ -67,7 +67,7 @@ public class ExpenseController {
     }
 
     @PatchMapping(value = "/{id}")
-    public String editExpense(Principal principal, @Valid @ModelAttribute("expense") Expense expense,
+    public String editExpense(@Valid @ModelAttribute("expense") Expense expense,
                               @PathVariable("id") Long id,
                               BindingResult result) {
         if (result.hasErrors()) {
@@ -77,7 +77,7 @@ public class ExpenseController {
         return "redirect:/content";
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public String deleteExpense(Principal principal, @PathVariable("id") Long id) {
         User user = userService.findUserByUsername(principal.getName());
         expenseService.deleteExpense(user, id);

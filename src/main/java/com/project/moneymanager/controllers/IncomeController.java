@@ -43,7 +43,7 @@ public class IncomeController {
     }
 
     @PatchMapping(value = "/{id}")
-    public String editIncome(Principal principal, @Valid @ModelAttribute("income") Income income,
+    public String editIncome(@Valid @ModelAttribute("income") Income income,
                              @PathVariable("id") Long id,
                              BindingResult result) {
         if (result.hasErrors()) {
@@ -54,7 +54,7 @@ public class IncomeController {
         return "redirect:/content";
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public String deleteIncome(Principal principal, @PathVariable("id") Long id) {
         User user = userService.findUserByUsername(principal.getName());
         incomeService.deleteIncome(user, id);

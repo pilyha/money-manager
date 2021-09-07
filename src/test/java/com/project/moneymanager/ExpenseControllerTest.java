@@ -112,7 +112,7 @@ public class ExpenseControllerTest {
         expense.setUser(user);
         expenseService.addExpense(user,expense);
         Long id = expenseService.findAllExpenses().get(0).getId();
-        this.mockMvc.perform(delete("/expenses/delete/" + id)
+        this.mockMvc.perform(delete("/expenses/" + id)
                 .with(user("Illia"))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))

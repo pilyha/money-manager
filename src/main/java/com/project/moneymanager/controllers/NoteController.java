@@ -33,7 +33,7 @@ public class NoteController {
         return "redirect:/dashboard";
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public String deletePlan(Principal principal, @PathVariable("id") Long id) {
         noteService.deleteNote(id);
         return "redirect:/dashboard";

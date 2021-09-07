@@ -33,15 +33,15 @@ public class CategoryController {
 
     @PostMapping(value = "/new")
     public String createCategory(Principal principal, @Valid @ModelAttribute("category") Category category, BindingResult result,
-                                 Model model, RedirectAttributes rAttributes) {
+                                 RedirectAttributes rAttributes) {
         User user = userService.findUserByUsername(principal.getName());
         if (result.hasErrors()) {
-            return "addCategory.html";
+            return "redirect:/dashboard";
         }
         for (Category cat : categoryService.findAllCategory()) {
             if (category.getName().equals(cat.getName())) {
                 rAttributes.addFlashAttribute("error", "name already exists");
-                return "redirect:/category/new";
+                return "redirect:/dashboard";
             }
         }
         category.setUser(user);
@@ -50,7 +50,7 @@ public class CategoryController {
     }
 
     @PatchMapping(value="/{id}")
-    public String editCategory(Principal principal, @Valid@ModelAttribute("cate") Category category,
+    public String editCategory(@Valid@ModelAttribute("cate") Category category,
                                @PathVariable("id") Long id,
                                BindingResult result) {
         if(result.hasErrors()){
@@ -61,9 +61,8 @@ public class CategoryController {
     }
 
 
-    @DeleteMapping(value = "/delete/{id}")
-    public String deleteCategory(Principal principal, @PathVariable("id") Long id) {
-
+    @DeleteMapping(value = "/{id}")
+    public String deleteCategory(@PathVariable("id") Long id) {
         categoryService.deleteCategory(id);
         return "redirect:/content";
     }

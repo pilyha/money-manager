@@ -31,9 +31,9 @@ public class Plan {
     @Min(value = 1,message = "The amount can't be a negative and zero")
     private Integer limitz;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date start_datez;
+    private Date start_date;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date end_datez;
+    private Date end_date;
     @Column(updatable = false)
     private Date createdAt;
     private Date updatedAt;
@@ -43,11 +43,11 @@ public class Plan {
     @OneToMany(mappedBy = "plan", fetch = FetchType.LAZY)
     private List<Expense> expenses;
 
-    public Plan(String name, Integer limitz, Date start_datez, Date end_datez) {
+    public Plan(String name, Integer limitz, Date start_date, Date end_date) {
         this.name = name;
         this.limitz = limitz;
-        this.start_datez = start_datez;
-        this.end_datez = end_datez;
+        this.start_date = start_date;
+        this.end_date = end_date;
     }
 
     public Plan() {
@@ -77,20 +77,20 @@ public class Plan {
         this.limitz = limitz;
     }
 
-    public Date getStart_datez() {
-        return start_datez;
+    public Date getStart_date() {
+        return start_date;
     }
 
-    public void setStart_datez(Date start_datez) {
-        this.start_datez = start_datez;
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
     }
 
-    public Date getEnd_datez() {
-        return end_datez;
+    public Date getEnd_date() {
+        return end_date;
     }
 
-    public void setEnd_datez(Date end_datez) {
-        this.end_datez = end_datez;
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
     }
 
 

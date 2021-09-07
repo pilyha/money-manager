@@ -56,7 +56,7 @@ public class PlanController {
         return "redirect:/content";
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public String deletePlan(Principal principal, @PathVariable("id") Long id) {
         planService.deletePlan(id);
         return "redirect:/content";

@@ -95,7 +95,7 @@ public class CategoryControllerTest {
         category.setUser(user);
         categoryService.addCategory(category);
         Long id = categoryService.findAllCategory().get(0).getId();
-        this.mockMvc.perform(delete("/categories/delete/" + id)
+        this.mockMvc.perform(delete("/categories/" + id)
                 .with(user("Illia"))
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))

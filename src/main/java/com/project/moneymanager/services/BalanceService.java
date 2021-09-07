@@ -6,6 +6,7 @@ import com.project.moneymanager.models.Income;
 import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.BalanceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -13,35 +14,16 @@ import java.util.stream.Collectors;
 @Service
 public class BalanceService {
 
-    @Autowired
-    private BalanceRepository balanceRepository;
-    @Autowired
-    private IncomeService incomeService;
-    @Autowired
-    private ExpenseService expenseService;
+    private final BalanceRepository balanceRepository;
+    private final IncomeService incomeService;
+    private final ExpenseService expenseService;
 
-    public Balance adding(User u, int d){
-        int x=0;
-        for(Balance b:u.getBalances()){
-            if(b==null){
-                x=b.getVal();
-            }
-        }
-        Balance bal=new Balance(u,d+x);
-        balanceRepository.save(bal);
-        return bal;
+    public BalanceService(@Lazy BalanceRepository balanceRepository,@Lazy IncomeService incomeService,@Lazy ExpenseService expenseService) {
+        this.balanceRepository = balanceRepository;
+        this.incomeService = incomeService;
+        this.expenseService = expenseService;
     }
-    public Balance taking(User u,int d){
-        int x=0;
-        for(Balance b:u.getBalances()){
-            if(b==null){
-                x=b.getVal();
-            }
-        }
-        Balance bal=new Balance(u,x-d);
-        balanceRepository.save(bal);
-        return bal;
-    }
+
     public Balance getLastBalance(User u){
         Balance bal=null;
         for(Balance b:u.getBalances()){
