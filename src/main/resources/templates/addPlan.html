@@ -8,37 +8,26 @@
 </head>
 <body>
 <div style="margin-left: 100px;margin-right: 100px">
-<div class="container">
-    <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-        <a href="/index" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><img
-                    th:src="@{/img/icon.png}"/></svg>
-        </a>
-
-        <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/dashboard" class="nav-link px-2 link-secondary">Dashboard</a></li>
-            <li><a href="/incomes/new" class="nav-link px-2 link-secondary">Add Income</a></li>
-            <li><a href="/plans/new" class="nav-link px-2 link-dark">Add Plan</a></li>
-            <li><a href="/expenses/new" class="nav-link px-2 link-dark">Add Expense</a></li>
-            <li><a href="/content" class="nav-link px-2 link-dark">Content</a></li>
-            <li><a href="/history" class="nav-link px-2 link-dark">History</a></li>
-        </ul>
-        <div class="col-md-3 text-end">
+    <div class="container">
+        <header class="d-flex justify-content-around align-items-center py-3 mb-4 border-bottom ">
+            <a href="/home" class="d-flex"><img th:src="@{/img/icon.png}"/></a>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li class="nav-item"><a href="/incomes/new" class="nav-link">Add Income</a></li>
+                <li class="nav-item"><a href="/expenses/new" class="nav-link">Add Expense</a></li>
+                <li class="nav-item"><a href="/plans/new" class="nav-link active">Add Plan</a></li>
+                <li class="nav-item"><a href="/content" class="nav-link">Content</a></li>
+                <li class="nav-item"><a href="/history" class="nav-link">History</a></li>
+            </ul>
             <div id="usernameId">
                 <span th:text="*{user.username}">Anton</span>
+                <form id="logoutForm" th:method="POST" th:action="@{/logout}">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <button type="submit" class="btn btn-outline-primary me-2">Logout</button>
+                </form>
             </div>
-            <form id="logoutForm" th:method="POST" th:action="@{/logout}">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <button type="submit" class="btn btn-outline-primary me-2">Logout</button>
-            </form>
-        </div>
-    </header>
-</div>
-    <style>
-        #user {
-            width: 300px; /* Ширина поля в пикселах */
-        }
-    </style>
+        </header>
+    </div>
 <form th:action="@{/plans/new}" th:method="POST" th:object="${plan}">
     <label for="name">Name: </label>
     <div class="input-group mb-3">
