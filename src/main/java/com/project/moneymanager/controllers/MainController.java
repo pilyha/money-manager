@@ -2,39 +2,40 @@ package com.project.moneymanager.controllers;
 
 import com.project.moneymanager.models.*;
 import com.project.moneymanager.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
 @Controller
 public class MainController {
+
     private final UserService userService;
     private final PlanService planService;
     private final IncomeService incomeService;
     private final BalanceService balanceService;
     private final ExpenseService expenseService;
     private final CategoryService categoryService;
-    private final NoteService noteService;
 
-    public MainController(UserService userService, PlanService planService, IncomeService incomeService, BalanceService balanceService, ExpenseService expenseService, CategoryService categoryService, NoteService noteService) {
+    @Autowired
+    public MainController(UserService userService, PlanService planService, IncomeService incomeService, BalanceService balanceService, ExpenseService expenseService, CategoryService categoryService) {
         this.userService = userService;
         this.planService = planService;
         this.incomeService = incomeService;
         this.balanceService = balanceService;
         this.expenseService = expenseService;
         this.categoryService = categoryService;
-        this.noteService = noteService;
     }
 
     @GetMapping("/dashboard")
-    public String homepage(Principal principal, Model model, @ModelAttribute("note") Note note, @ModelAttribute("category") Category category, BindingResult result) {
-        User user = userService.findUserByUsername(principal.getName());
+    public String dashboard(Principal principal, Model model, @ModelAttribute("note") Note note, @ModelAttribute("category") Category category, BindingResult result) {
+        User user = userService.findByUsername(principal.getName());
         Balance balance;
         if (user.getBalances().size() < 1) {
             balance = new Balance(user, 0);
@@ -48,7 +49,8 @@ public class MainController {
         for (Balance bal : user.getBalances()) {
             values[j] = bal.getVal();
             dates[j] = j;
-            j++;        }
+            j++;
+        }
 
         String[] categories = new String[user.getCategories().size()];
         int[] persent = new int[user.getCategories().size()];
@@ -77,24 +79,15 @@ public class MainController {
         model.addAttribute("categories", categories);
         model.addAttribute("persent", persent);
 
-        return "home.html";
+        return "dashboard.html";
     }
 
-    @PostMapping(value = "/addNote")
-    public String newNote(Principal principal, @Valid @ModelAttribute("note") Note note, BindingResult result) {
-        if (result.hasErrors()) {
-            return "redirect:/dashboard";
-        }
-        User user = userService.findUserByUsername(principal.getName());
-        noteService.addNote(user, note);
-        return "redirect:/dashboard";
-    }
 
     @GetMapping("/history")
     public String history(Principal principal, Model model) {
-        model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-        List<Plan> plans = userService.findUserByUsername(principal.getName()).getPlans();
-        List<Income> incomes = userService.findUserByUsername(principal.getName()).getIncomes();
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
+        List<Plan> plans = userService.findByUsername(principal.getName()).getPlans();
+        List<Income> incomes = userService.findByUsername(principal.getName()).getIncomes();
         List<Expense> expenses = null;
         for (Plan plan : plans) {
             if (expenses == null) {
@@ -103,7 +96,6 @@ public class MainController {
                 expenses.addAll(plan.getExpenses());
             }
         }
-        model.addAttribute("username", principal.getName());
         model.addAttribute("incomes", incomes);
         model.addAttribute("expenses", expenses);
         return "history.html";
@@ -116,28 +108,18 @@ public class MainController {
                        @ModelAttribute("income") Income income,
                        @ModelAttribute("plan") Plan plan,
                        @ModelAttribute("expense") Expense expense,
-                       @ModelAttribute("cate") Category cate,
-                       BindingResult result,
-                       Model model, RedirectAttributes rAttributes) {
-        User user = userService.findUserByUsername(principal.getName());
+                       @ModelAttribute("category") Category category,
+                       Model model) {
+        User user = userService.findByUsername(principal.getName());
         List<Income> incomes = user.getIncomes();
         List<Plan> plans = user.getPlans();
         List<Expense> expenses = null;
-        for (Plan pland : plans) {
+        for (Plan plan1 : plans) {
             if (expenses == null) {
-                expenses = pland.getExpenses();
+                expenses = plan1.getExpenses();
             } else {
-                expenses.addAll(pland.getExpenses());
+                expenses.addAll(plan1.getExpenses());
             }
-        }
-        if (incomes == null) {
-            rAttributes.addFlashAttribute("errori", "this field is empty");
-        }
-        if (plans == null) {
-            rAttributes.addFlashAttribute("errorp", "this field is empty");
-        }
-        if (expenses == null) {
-            rAttributes.addFlashAttribute("errore", "this field is empty");
         }
         int option = 0;
         if (action.equals("incomes")) {
@@ -145,7 +127,7 @@ public class MainController {
 
         } else if (action.equals("plans")) {
             option = 1;
-            model.addAttribute("plan", planService.findPlanByID(id));
+            model.addAttribute("plan", planService.findPlanById(id));
 
         } else if (action.equals("expenses")) {
             option = 2;
@@ -155,14 +137,14 @@ public class MainController {
             model.addAttribute("category", categoryService.findCategoryById(id));
         }
 
-        model.addAttribute("user", user);
-        model.addAttribute("option", option);
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("incomes", incomes);
-        model.addAttribute("plans", plans);
-        model.addAttribute("expenses", expenses);
-        model.addAttribute("categories", categoryService.findAllCategory());
-        return "edit.html";
+        model.addAttribute("user", user)
+                .addAttribute("option", option)
+                .addAttribute("username", principal.getName())
+                .addAttribute("incomes", incomes)
+                .addAttribute("plans", plans)
+                .addAttribute("expenses", expenses)
+                .addAttribute("categories", categoryService.findAllCategory());
+        return "content.html";
     }
 
     @GetMapping("/content")
@@ -170,40 +152,27 @@ public class MainController {
                        @ModelAttribute("income") Income income,
                        @ModelAttribute("plan") Plan plan,
                        @ModelAttribute("expense") Expense expense,
-                       @ModelAttribute("cate") Category cate,
-                       BindingResult result,
-                       Model model, RedirectAttributes rAttributes) {
+                       @ModelAttribute("category") Category category,
+                       Model model) {
 
-            User user = userService.findUserByUsername(principal.getName());
-            List<Income> incomes = user.getIncomes();
-            List<Plan> plans = user.getPlans();
-            List<Expense> expenses = null;
-            for (Plan pland : plans) {
-                if (expenses == null) {
-                    expenses = pland.getExpenses();
-                } else {
-                    expenses.addAll(pland.getExpenses());
-                }
-            }
-            if (incomes == null) {
-                rAttributes.addFlashAttribute("errori", "this field is empty");
-            }
-            if (plans == null) {
-                rAttributes.addFlashAttribute("errorp", "this field is empty");
-            }
+        User user = userService.findByUsername(principal.getName());
+        List<Income> incomes = user.getIncomes();
+        List<Plan> plans = user.getPlans();
+        List<Expense> expenses = null;
+        for (Plan plan1 : plans) {
             if (expenses == null) {
-                rAttributes.addFlashAttribute("errore", "this field is empty");
+                expenses = plan1.getExpenses();
+            } else {
+                expenses.addAll(plan1.getExpenses());
             }
-            int option = 5;
-        model.addAttribute("user", user);
-        model.addAttribute("option", option);
-        model.addAttribute("username", principal.getName());
-        model.addAttribute("incomes", incomes);
-        model.addAttribute("plans", plans);
-        model.addAttribute("expenses", expenses);
-        model.addAttribute("categories", categoryService.findAllCategory());
-        return "edit.html";
+        }
+        model.addAttribute("user", user)
+                .addAttribute("username", principal.getName())
+                .addAttribute("incomes", incomes)
+                .addAttribute("plans", plans)
+                .addAttribute("expenses", expenses)
+                .addAttribute("categories", categoryService.findAllCategory());
+        return "content.html";
 
     }
 }
-

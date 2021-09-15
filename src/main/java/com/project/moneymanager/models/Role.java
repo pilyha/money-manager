@@ -4,12 +4,6 @@ package com.project.moneymanager.models;
 import javax.persistence.*;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
 
 @Entity
 @Table(name = "roles")
@@ -23,8 +17,9 @@ public class Role {
 
     public Role() {
     }
-    public Role(String name){
-        this.name=name;
+
+    public Role(String name) {
+        this.name = name;
     }
 
     public Long getId() {

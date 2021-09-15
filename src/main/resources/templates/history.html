@@ -6,12 +6,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link th:href="@{/css/headers.css}" rel="stylesheet">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
 
 </head>
 <body>
 <div class="container">
     <header class="d-flex justify-content-around align-items-center py-3 mb-4 border-bottom ">
-        <a href="/home" class="d-flex"><img th:src="@{/img/icon.png}"/></a>
+        <a href="/home" class="money-icon"></a>
         <ul class="nav nav-pills">
             <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
             <li class="nav-item"><a href="/incomes/new" class="nav-link">Add Income</a></li>
@@ -30,51 +31,51 @@
     </header>
 </div>
 <div class="d-flex justify-content-evenly align-items-center">
-<div div style="align-content: center;width:600px ">
-    <table class="table table-hover table-dark table-bordered caption-top">
-        <caption>Incomes</caption>
-        <thead>
-        <tr>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <div th:each="income : ${incomes}">
+    <div div style="align-content: center;width:600px ">
+        <table class="table table-hover table-dark table-bordered caption-top">
+            <caption>Incomes</caption>
+            <thead>
             <tr>
-                <td><a th:text="${income.getAmount()}">amount</a></td>
-                <td><a th:text="${income.getDescription()}">description</a></td>
-                <td><a th:text="${income.getDate()}">date</a></td>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Date</th>
             </tr>
-        </div>
-        </c:forEach>
-        </tr>
-        </tbody>
-    </table>
-</div>
-<div div style="align-content: center;width:600px ">
-    <table class="table table-hover table-dark table-bordered caption-top">
-        <caption >Expenses</caption>
-        <thead>
-        <tr>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <div th:each="expense : ${expenses}">
+            </thead>
+            <tbody>
+            <div th:each="income : ${incomes}">
+                <tr>
+                    <td><a th:text="${income.getAmount()}">amount</a></td>
+                    <td><a th:text="${income.getDescription()}">description</a></td>
+                    <td><a th:text="${income.getDate()}">date</a></td>
+                </tr>
+            </div>
+            </c:forEach>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div div style="align-content: center;width:600px ">
+        <table class="table table-hover table-dark table-bordered caption-top">
+            <caption>Expenses</caption>
+            <thead>
             <tr>
-                <td><a th:text="${expense.getAmount()}">amount</a></td>
-                <td><a th:text="${expense.getDescription()}">description</a></td>
-                <td><a th:text="${expense.getDate()}">date</a></td>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Date</th>
             </tr>
-        </div>
-        </tr>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            <div th:each="expense : ${expenses}">
+                <tr>
+                    <td><a th:text="${expense.getAmount()}">amount</a></td>
+                    <td><a th:text="${expense.getDescription()}">description</a></td>
+                    <td><a th:text="${expense.getDate()}">date</a></td>
+                </tr>
+            </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"

@@ -11,10 +11,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
 </head>
 <body>
-<div style="margin-left: 100px">
+<div style="margin-left: 100px;margin-right: 100px">
     <div class="container">
         <header class="d-flex justify-content-around align-items-center py-3 mb-4 border-bottom ">
-            <a href="/home" class="d-flex"><img th:src="@{img/icon.png}"/></a>
+            <a href="/home" class="money-icon"></a>
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="/dashboard" class="nav-link active">Dashboard</a></li>
                 <li class="nav-item"><a href="/incomes/new" class="nav-link">Add Income</a></li>
@@ -99,23 +99,25 @@
         </div>
 
     </div>
-    <div class="addCategory" style="margin-left:750px">
+    <div class="d-flex align-items-center justify-content-between">
+        <div th:if="${balance<0}">
+            <h2 style="color: darkred">Balance:</h2>
+            <h2 style="color: darkred" th:text="${balance}"></h2>
+            <h4 style="color: red">you have debits</h4>
+        </div>
+        <div th:if="${balance>=0}">
+            <h2 style="color: darkgreen">Balance:</h2>
+            <h2 style="color: darkgreen" th:text="${balance}"></h2>
+        </div>
         <form id="newCate" th:method="POST" th:action="@{/categories/new}" th:object="${category}">
+            <h5 th:text="${error}"></h5>
             <input type="text" autofocus="true" th:field="*{name}"/>
             <input type="submit" value="Add category!"/>
-
         </form>
     </div>
-    <div style="display:inline-flex ">
+    <div style="display:inline-flex">
         <div style="align-content: center;width:600px ">
             <div>
-                <div th:if="${balance<0}">
-                    <h2 style="color: darkred" th:text="${balance}"></h2>
-                    <h4 style="color: red">you have debits</h4>
-                </div>
-                <div th:if="${balance>=0}">
-                    <h2 style="color: darkgreen" th:text="${balance}"></h2>
-                </div>
                 <canvas id="myChart"></canvas>
             </div>
 

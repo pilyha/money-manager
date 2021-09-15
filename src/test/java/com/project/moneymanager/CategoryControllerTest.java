@@ -6,10 +6,8 @@ import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.CategoryRepository;
 import com.project.moneymanager.services.CategoryService;
 import com.project.moneymanager.services.UserService;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,8 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("/application-test.properties")
-@Sql(value = {"create-user-before.sql"},executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = {"delete-user-after.sql"},executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(value = {"create-user-before.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = {"delete-user-after.sql"}, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class CategoryControllerTest {
 
     @Autowired
@@ -51,56 +49,66 @@ public class CategoryControllerTest {
     @Test
     void contextLoads() {
         assertThat(categoryController).isNotNull();
+        assertThat(categoryRepository).isNotNull();
+        assertThat(categoryService).isNotNull();
+        assertThat(userService).isNotNull();
     }
 
     @Test
     void createCategory() throws Exception {
-        User user = userService.findUserByUsername("Illia");
+        User user = userService.findByUsername("Illia");
         Category category = new Category("Oil");
         category.setUser(user);
         this.mockMvc.perform(post("/categories/new")
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param("name",category.getName()))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("name", category.getName()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
+
+        Assertions.assertTrue(categoryRepository.existsById(categoryService.findAllCategory().get(0).getId()));
         categoryService.deleteCategory(categoryService.findAllCategory().get(0).getId());
     }
 
     @Test
     void updateCategory() throws Exception {
-        User user = userService.findUserByUsername("Illia");
+        User user = userService.findByUsername("Illia");
         Category category = new Category("Water");
         category.setUser(user);
         categoryService.addCategory(category);
         Category newCategory = new Category("Chips");
         Long id = categoryService.findAllCategory().get(0).getId();
         this.mockMvc.perform(patch("/categories/" + id)
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param("name",newCategory.getName()))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("name", newCategory.getName()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/content"));
+
+        Assertions.assertEquals(newCategory.getName(), categoryService.findCategoryById(id).getName());
         categoryService.deleteCategory(id);
+
     }
 
     @Test
-    void deleteCategory() throws Exception{
-        User user = userService.findUserByUsername("Illia");
+    void deleteCategory() throws Exception {
+        User user = userService.findByUsername("Illia");
         Category category = new Category("Water");
         category.setUser(user);
         categoryService.addCategory(category);
         Long id = categoryService.findAllCategory().get(0).getId();
         this.mockMvc.perform(delete("/categories/" + id)
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/content"));
+
+        Assertions.assertFalse(categoryRepository.existsById(id));
     }
 }

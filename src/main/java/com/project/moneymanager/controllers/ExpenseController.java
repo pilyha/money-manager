@@ -1,7 +1,6 @@
 package com.project.moneymanager.controllers;
 
 import com.project.moneymanager.models.Expense;
-import com.project.moneymanager.models.Plan;
 import com.project.moneymanager.models.User;
 import com.project.moneymanager.services.BalanceService;
 import com.project.moneymanager.services.ExpenseService;
@@ -15,54 +14,44 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 @Controller
 @RequestMapping("/expenses")
 public class ExpenseController {
+
+    private final ExpenseService expenseService;
+    private final UserService userService;
+
     @Autowired
-    private ExpenseService expenseService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private BalanceService balanceService;
+    public ExpenseController(ExpenseService expenseService, UserService userService) {
+        this.expenseService = expenseService;
+        this.userService = userService;
+    }
 
     @GetMapping("/new")
-    public String newExpenses(Principal principal, @ModelAttribute("expense") Expense expense, Model model) {
-        model.addAttribute("user", userService.findUserByUsername(principal.getName()));
-        model.addAttribute("categories", userService.findUserByUsername(principal.getName()).getCategories());
+    public String displayExpenseCreation(Principal principal, @ModelAttribute("expense") Expense expense, Model model) {
+        model.addAttribute("user", userService.findByUsername(principal.getName()));
+        model.addAttribute("categories", userService.findByUsername(principal.getName()).getCategories());
         return "addExpense.html";
     }
 
     @PostMapping(value = "/new")
-    public String createNewExpense(Principal principal, @Valid @ModelAttribute("expense") Expense expense, BindingResult result, Model model, RedirectAttributes rAttributes) {
-        User user = userService.findUserByUsername(principal.getName());
-        model.addAttribute("user",user);
+    public String createExpense(Principal principal, @Valid @ModelAttribute("expense") Expense expense, BindingResult result, Model model, RedirectAttributes rAttributes) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("user", user);
         if (result.hasErrors()) {
             return "addExpense.html";
         } else {
-            for (Plan plan : user.getPlans()) {
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd ");
-                String today = df.format(Calendar.getInstance().getTime());
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String strDate = dateFormat.format(plan.getStart_date());
-                if (today.compareTo(strDate) > 0) {
-
-                    if (balanceService.getLastBalance(user).getVal() + expense.getAmount() > plan.getLimitz()) {
-                        rAttributes.addFlashAttribute("amounterrror", "your expense have  exceeded your plan");
-                        return "redirect:/expense/new";
-                    } else {
-                        expense.setPlan(plan);
-                        expenseService.addExpense(user, expense);
-                        System.out.println("expense added to plan");
-                        return "redirect:/dashboard";
-                    }
-                }
+            try {
+                expenseService.addExpense(user, expense);
+                return "redirect:/dashboard";
+            } catch (NullPointerException e) {
+                rAttributes.addFlashAttribute("error", "There is no plan to add");
+                return "redirect:/expenses/new";
+            } catch (RuntimeException e) {
+                rAttributes.addFlashAttribute("amountError", "Expense have exceeded the plan");
+                return "redirect:/expenses/new";
             }
-            rAttributes.addFlashAttribute("error", "there is no plan to add");
-            return "redirect:/expense/new";
         }
     }
 
@@ -73,13 +62,13 @@ public class ExpenseController {
         if (result.hasErrors()) {
             return "redirect:/content";
         }
-        expenseService.updateExpense(id,expense);
+        expenseService.updateExpense(id, expense);
         return "redirect:/content";
     }
 
     @DeleteMapping(value = "/{id}")
     public String deleteExpense(Principal principal, @PathVariable("id") Long id) {
-        User user = userService.findUserByUsername(principal.getName());
+        User user = userService.findByUsername(principal.getName());
         expenseService.deleteExpense(user, id);
         return "redirect:/content";
     }

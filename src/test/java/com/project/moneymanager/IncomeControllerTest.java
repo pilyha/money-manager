@@ -1,16 +1,13 @@
 package com.project.moneymanager;
 
 import com.project.moneymanager.controllers.IncomeController;
-import com.project.moneymanager.models.Category;
 import com.project.moneymanager.models.Income;
 import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.IncomeRepository;
 import com.project.moneymanager.services.IncomeService;
 import com.project.moneymanager.services.UserService;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -55,59 +52,67 @@ public class IncomeControllerTest {
     @Test
     void contextLoads() {
         assertThat(incomeController).isNotNull();
+        assertThat(incomeRepository).isNotNull();
+        assertThat(incomeService).isNotNull();
+        assertThat(userService).isNotNull();
     }
 
     @Test
     void createIncome() throws Exception {
-        User user = userService.findUserByUsername("Illia");
-        Income income = new Income(1000,"Salary",(Calendar.getInstance().getTime()));
+        User user = userService.findByUsername("Illia");
+        Income income = new Income(1000, "Salary", (Calendar.getInstance().getTime()));
         income.setUser(user);
         this.mockMvc.perform(post("/incomes/new")
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param("amount", String.valueOf(income.getAmount()))
-                .param("description",income.getDescription())
-                .param("date", new SimpleDateFormat("yyyy-MM-dd ").format(income.getDate())))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("amount", String.valueOf(income.getAmount()))
+                        .param("description", income.getDescription())
+                        .param("date", new SimpleDateFormat("yyyy-MM-dd ").format(income.getDate())))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
-        incomeService.deleteIncome(user,incomeService.findAllIncomes().get(0).getId());
+        Assertions.assertTrue(incomeRepository.existsById(incomeService.findAllIncomes().get(0).getId()));
+        incomeService.deleteIncome(user, incomeService.findAllIncomes().get(0).getId());
     }
 
     @Test
     void updateIncome() throws Exception {
-        User user = userService.findUserByUsername("Illia");
-        Income income = new Income(1000,"Salary",(Calendar.getInstance().getTime()));
+        User user = userService.findByUsername("Illia");
+        Income income = new Income(1000, "Salary", (Calendar.getInstance().getTime()));
         income.setUser(user);
-        incomeService.addIncome(user,income);
-        Income newIncome = new Income(500,"Present",null);
-        Long id  = incomeService.findAllIncomes().get(0).getId();
+        incomeService.addIncome(user, income);
+        Income newIncome = new Income(500, "Present", null);
+        Long id = incomeService.findAllIncomes().get(0).getId();
         this.mockMvc.perform(patch("/incomes/" + id)
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param("amount", String.valueOf(newIncome.getAmount()))
-                .param("description", newIncome.getDescription()))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("amount", String.valueOf(newIncome.getAmount()))
+                        .param("description", newIncome.getDescription()))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/content"));
-        incomeService.deleteIncome(user,id);
+        Assertions.assertEquals(newIncome.getDescription(), incomeService.findIncomeById(id).getDescription());
+        incomeService.deleteIncome(user, id);
     }
 
     @Test
-    void deleteIncome() throws Exception{
-        User user = userService.findUserByUsername("Illia");
-        Income income = new Income(1000,"Salary",(Calendar.getInstance().getTime()));
+    void deleteIncome() throws Exception {
+        User user = userService.findByUsername("Illia");
+        Income income = new Income(1000, "Salary", (Calendar.getInstance().getTime()));
         income.setUser(user);
-        incomeService.addIncome(user,income);
-        Long id  = incomeService.findAllIncomes().get(0).getId();
+        incomeService.addIncome(user, income);
+        Long id = incomeService.findAllIncomes().get(0).getId();
         this.mockMvc.perform(delete("/incomes/" + id)
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/content"));
+
+        Assertions.assertFalse(incomeRepository.existsById(id));
     }
+
 }

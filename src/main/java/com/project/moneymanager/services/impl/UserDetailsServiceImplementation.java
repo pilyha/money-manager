@@ -1,8 +1,9 @@
-package com.project.moneymanager.services;
+package com.project.moneymanager.services.impl;
 
 import com.project.moneymanager.models.Role;
 import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,13 @@ import java.util.List;
 
 @Service
 public class UserDetailsServiceImplementation implements UserDetailsService {
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserDetailsServiceImplementation(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,10 +33,6 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
         }
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthorities(user));
-    }
-
-    public UserDetailsServiceImplementation(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
 
     private List<GrantedAuthority> getAuthorities(User user) {

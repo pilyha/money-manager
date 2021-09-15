@@ -1,23 +1,10 @@
 package com.project.moneymanager.models;
 
-import java.util.Date;
-import java.util.List;
 import javax.persistence.*;
-
-import javax.persistence.Entity;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -25,13 +12,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min=3, message="Username must be greater than 3 characters")
+    @Size(min = 3, message = "Username must be greater than 3 characters")
     private String username;
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+.[a-zA-Z0-9.-]+$", message = "Invalid email pattern")
     private String email;
-    @Size(min=8, message="Password must be greater than 8 characters")
+    @Size(min = 8, message = "Password must be greater than 8 characters")
     private String password;
-    @Size(min=8, message="Password must be greater than 8 characters")
+    @Size(min = 8, message = "Password must be greater than 8 characters")
     @Transient
     private String passwordConfirmation;
     @Column(updatable = false)
@@ -54,18 +41,17 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Plan> plans;
 
-    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Balance> balances;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Note> notes;
 
-    @OneToMany(mappedBy="user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Category> categories;
 
     public User() {
     }
-    
 
 
     public User(String username, String email, String password) {

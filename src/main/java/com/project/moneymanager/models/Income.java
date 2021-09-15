@@ -3,24 +3,9 @@ package com.project.moneymanager.models;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "incomes")
@@ -28,11 +13,11 @@ public class Income {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Min(value = 1,message = "The amount can't be negative and zero")
+    @Min(value = 1, message = "The amount can't be negative and zero")
     private Integer amount;
-    @Size.List ({
-            @Size(min=3, message="The description must be at least {min} characters"),
-            @Size(max=20, message="The description must be less than {max} characters")
+    @Size.List({
+            @Size(min = 3, message = "The description must be at least {min} characters"),
+            @Size(max = 20, message = "The description must be less than {max} characters")
     })
     private String description;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

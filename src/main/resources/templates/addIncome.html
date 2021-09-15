@@ -5,13 +5,13 @@
     <title>Add Income</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-
+    <link th:href="@{/css/main.css}" rel="stylesheet">
 </head>
 <body>
 <div style="margin-left: 100px;margin-right: 100px">
     <div class="container">
         <header class="d-flex justify-content-around align-items-center py-3 mb-4 border-bottom ">
-            <a href="/home" class="d-flex"><img th:src="@{/img/icon.png}"/></a>
+            <a href="/home" class="money-icon"></a>
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
                 <li class="nav-item"><a href="/incomes/new" class="nav-link active">Add Income</a></li>
@@ -34,21 +34,21 @@
         <div class="input-group mb-3">
             <span class="input-group-text">$</span>
             <input type="number" min="1" aria-label="Amount (to the nearest dollar)" autofocus="true"
-                   th:field="*{amount}" id="amount" >
+                   th:field="*{amount}" id="amount">
             <span class="input-group-text">.00</span>
             <p th:if="${#fields.hasErrors('amount')}" th:errorclass="error" th:errors="*{amount}"/>
         </div>
         <label for="description">Description: </label>
         <div class="input-group mb-3">
             <span class="input-group-text">Write a description</span>
-            <textarea  aria-label="With textarea" th:field="*{description}"
+            <textarea aria-label="With textarea" th:field="*{description}"
                       id="description"></textarea>
             <p th:if="${#fields.hasErrors('description')}" th:errorclass="error" th:errors="*{description}"/>
         </div>
         <label for="date">Date: </label>
         <div class="input-group mb-3">
             <span class="input-group-text">Date</span>
-            <input type="date"  autofocus="true"
+            <input type="date" autofocus="true"
                    th:field="*{date}" id="date">
             <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"/>
         </div>

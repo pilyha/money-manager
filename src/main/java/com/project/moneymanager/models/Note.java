@@ -12,9 +12,9 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotEmpty
-    @Size.List ({
-            @Size(min=3, message="The description must be at least {min} characters"),
-            @Size(max=30, message="The description must be less than {max} characters")
+    @Size.List({
+            @Size(min = 3, message = "The description must be at least {min} characters"),
+            @Size(max = 30, message = "The description must be less than {max} characters")
     })
     private String description;
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,18 +1,15 @@
 package com.project.moneymanager;
 
 import com.project.moneymanager.controllers.ExpenseController;
-import com.project.moneymanager.models.Category;
 import com.project.moneymanager.models.Expense;
-import com.project.moneymanager.models.Income;
 import com.project.moneymanager.models.User;
 import com.project.moneymanager.repositories.ExpenseRepository;
 import com.project.moneymanager.services.CategoryService;
 import com.project.moneymanager.services.ExpenseService;
 import com.project.moneymanager.services.UserService;
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -63,61 +60,70 @@ public class ExpenseControllerTest {
         assertThat(expenseController).isNotNull();
         assertThat(userService).isNotNull();
         assertThat(categoryService).isNotNull();
+        assertThat(expenseService).isNotNull();
+        assertThat(expenseRepository).isNotNull();
     }
 
 
     @Test
     void createExpenses() throws Exception {
-        User user = userService.findUserByUsername("Illia");
+        User user = userService.findByUsername("Illia");
         Expense expense = new Expense(999, "Gifts", (Calendar.getInstance().getTime()));
         expense.setUser(user);
         this.mockMvc.perform(post("/expenses/new")
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param("amount", String.valueOf(expense.getAmount()))
-                .param("description", expense.getDescription())
-                .param("date", new SimpleDateFormat("yyyy-MM-dd ").format(expense.getDate()))
-                .param("category", String.valueOf(categoryService.findCategoryById(1L).getId())))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("amount", String.valueOf(expense.getAmount()))
+                        .param("description", expense.getDescription())
+                        .param("date", new SimpleDateFormat("yyyy-MM-dd ").format(expense.getDate()))
+                        .param("category", String.valueOf(categoryService.findCategoryById(1L).getId())))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard"));
-        expenseService.deleteExpense(user,expenseService.findAllExpenses().get(0).getId());
+
+        Assertions.assertTrue(expenseRepository.existsById(expenseService.findAllExpenses().get(0).getId()));
+        expenseService.deleteExpense(user, expenseService.findAllExpenses().get(0).getId());
     }
 
     @Test
     void updateExpense() throws Exception {
-        User user = userService.findUserByUsername("Illia");
+        User user = userService.findByUsername("Illia");
         Expense expense = new Expense(999, "Gifts", (Calendar.getInstance().getTime()));
         expense.setUser(user);
-        expenseService.addExpense(user,expense);
+        expenseService.addExpense(user, expense);
         Expense newExpense = new Expense(500, "Present", null);
         Long id = expenseService.findAllExpenses().get(0).getId();
         this.mockMvc.perform(patch("/expenses/" + id)
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                .param("amount", String.valueOf(newExpense.getAmount()))
-                .param("description", newExpense.getDescription())
-                .param("category", String.valueOf(categoryService.findCategoryById(2L).getId())))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("amount", String.valueOf(newExpense.getAmount()))
+                        .param("description", newExpense.getDescription())
+                        .param("category", String.valueOf(categoryService.findCategoryById(2L).getId())))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/content"));
-        expenseService.deleteExpense(user,id);
+
+        Assertions.assertEquals(newExpense.getDescription(), expenseService.findExpenseById(id).getDescription());
+        expenseService.deleteExpense(user, id);
     }
+
     @Test
-    void deleteExpense() throws Exception{
-        User user = userService.findUserByUsername("Illia");
+    void deleteExpense() throws Exception {
+        User user = userService.findByUsername("Illia");
         Expense expense = new Expense(999, "Gifts", (Calendar.getInstance().getTime()));
         expense.setUser(user);
-        expenseService.addExpense(user,expense);
+        expenseService.addExpense(user, expense);
         Long id = expenseService.findAllExpenses().get(0).getId();
         this.mockMvc.perform(delete("/expenses/" + id)
-                .with(user("Illia"))
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+                        .with(user("Illia"))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/content"));
+
+        Assertions.assertFalse(expenseRepository.existsById(id));
     }
 }

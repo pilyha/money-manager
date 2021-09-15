@@ -7,3 +7,11 @@
 {
 
 }
+.money-icon{
+    max-height: 100%;
+    max-width: 100%;
+    width:75px;
+    height:75px;
+    background-size: cover;
+    background-image: url('../img/logo.png');
+}

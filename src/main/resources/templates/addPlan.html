@@ -3,14 +3,15 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Add Plan</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <link th:href="@{/css/main.css}" rel="stylesheet">
 </head>
 <body>
 <div style="margin-left: 100px;margin-right: 100px">
     <div class="container">
         <header class="d-flex justify-content-around align-items-center py-3 mb-4 border-bottom ">
-            <a href="/home" class="d-flex"><img th:src="@{/img/icon.png}"/></a>
+            <a href="/home" class="money-icon"></a>
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="/dashboard" class="nav-link">Dashboard</a></li>
                 <li class="nav-item"><a href="/incomes/new" class="nav-link">Add Income</a></li>
@@ -28,41 +29,45 @@
             </div>
         </header>
     </div>
-<form th:action="@{/plans/new}" th:method="POST" th:object="${plan}">
-    <label for="name">Name: </label>
-    <div class="input-group mb-3">
-        <span class="input-group-text">Write name of plan</span>
-        <textarea aria-label="With textarea" th:field="*{name}"
-                  id="name"></textarea>
-        <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"/>
-    </div>
-    <label for="limitz">Limit: </label>
-    <div class="input-group mb-3">
-        <span class="input-group-text">$</span>
-        <input type="number" aria-label="Limit (to the nearest dollar)" autofocus="true"
-               th:field="*{limitz}" id="limitz">
-        <span class="input-group-text">.00</span>
-        <p th:if="${#fields.hasErrors('limitz')}" th:errorclass="error" th:errors="*{limitz}"/>
-    </div>
-    <label for="start_date">Date: </label>
-    <div class="input-group mb-3">
-        <span class="input-group-text">Date</span>
-        <input type="date" autofocus="true"
-               th:field="*{start_date}" id="start_date">
-        <p th:if="${#fields.hasErrors('start_date')}" th:errorclass="error" th:errors="*{start_date}"/>
-    </div>
-    <label for="end_date">Date: </label>
-    <div class="input-group mb-3">
-        <span class="input-group-text">Date</span>
-        <input type="date" autofocus="true"
-               th:field="*{end_date}" id="end_date">
-        <p th:if="${#fields.hasErrors('end_date')}" th:errorclass="error" th:errors="*{end_date}"/>
-    </div>
-    <input type="submit" value="Submit"/>
-</form>
+    <form th:action="@{/plans/new}" th:method="POST" th:object="${plan}">
+        <label for="name">Name: </label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Write name of plan</span>
+            <textarea aria-label="With textarea" th:field="*{name}"
+                      id="name"></textarea>
+            <p th:if="${#fields.hasErrors('name')}" th:errorclass="error" th:errors="*{name}"/>
+        </div>
+        <label for="limitz">Limit: </label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">$</span>
+            <input type="number" aria-label="Limit (to the nearest dollar)" autofocus="true"
+                   th:field="*{limitz}" id="limitz">
+            <span class="input-group-text">.00</span>
+            <p th:if="${#fields.hasErrors('limitz')}" th:errorclass="error" th:errors="*{limitz}"/>
+        </div>
+        <label for="start_date">Date: </label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Date</span>
+            <input type="date" autofocus="true"
+                   th:field="*{start_date}" id="start_date">
+            <p th:if="${#fields.hasErrors('start_date')}" th:errorclass="error" th:errors="*{start_date}"/>
+        </div>
+        <label for="end_date">Date: </label>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Date</span>
+            <input type="date" autofocus="true"
+                   th:field="*{end_date}" id="end_date">
+            <p th:if="${#fields.hasErrors('end_date')}" th:errorclass="error" th:errors="*{end_date}"/>
+        </div>
+        <input type="submit" value="Submit"/>
+    </form>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"  integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"
+        integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"
+        integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/"
+        crossorigin="anonymous"></script>
 
 </body>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
