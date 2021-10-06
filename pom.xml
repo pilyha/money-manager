@@ -16,7 +16,7 @@
     <description>This is the project for Java Spring framework</description>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <profiles>
